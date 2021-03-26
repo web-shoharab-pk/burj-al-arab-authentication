@@ -16,6 +16,7 @@ const Login = () => {
     const { from } = location.state || { from: { pathname: "/" } };
 
     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+
     const handleGoogleSignIn = () => {
 
         const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -25,21 +26,31 @@ const Login = () => {
                 // The signed-in user info.
                 const {displayName, email} = result.user;
                 const signInUser = {name: displayName, email}
-                console.log( signInUser );
+                // console.log( signInUser );
                 setLoggedInUser(signInUser);
-                history.replace(from);
+             
                 // ...
+                storeAuthToken();
             }).catch((error) => {
                 // Handle Errors here.
                 // var errorCode = error.code;
                 var errorMessage = error.message;
-                // The email of the user's account used.
-                // var email = error.email;
-                // The firebase.auth.AuthCredential type that was used.
-                // var credential = error.credential;
-                // ...
                 console.log( errorMessage);
             });
+
+        const storeAuthToken = () => {
+            firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+            .then(function(idToken) {
+                // Send token to your backend via HTTPS
+                sessionStorage.setItem('token', idToken)
+                history.replace(from);
+                console.log(idToken);
+              }).catch(function(error) {
+                // Handle error
+                console.log(error);
+              });
+        }
+
     }
     return (
         <div>

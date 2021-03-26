@@ -16,7 +16,7 @@ import Bookings from '../Bookings/Bookings';
 
 const Book = () => {
     const { bedType } = useParams();
-    const [loggedInUser] = useContext(UserContext);
+    const [loggedInUser, setLoggedInUser] = useContext(UserContext);
 
     const [selectedDate, setSelectedDate] = useState({
         CheckIn: new Date(),
@@ -44,7 +44,7 @@ const Book = () => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
+            setLoggedInUser(data);
         })
     }
 
@@ -59,9 +59,9 @@ const Book = () => {
                     <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         margin="normal"
-                        id="date-picker-inline"
+                        id="date-picker-dialog"
                         label="CheckIn Date"
                         value={selectedDate.CheckIn}
                         onChange={handleCheckInDate}
@@ -73,7 +73,7 @@ const Book = () => {
                         margin="normal"
                         id="date-picker-dialog"
                         label=" CheckOut Date"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         value={selectedDate.CheckOut}
                         onChange={handleCheckOutDate}
                         KeyboardButtonProps={{
